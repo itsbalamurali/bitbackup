@@ -31,7 +31,7 @@ func main() {
 	}
 	c := bitbucket.NewBasicAuth(*username, *password)
 	//Get all bitbucket repositories
-	res, err := c.Teams.Repositories("utuindia")
+	res, err := c.Teams.Repositories(*team)
 	if err != nil {
 		log.Fatalln("Bitbucket Error: ", err)
 	} else {
