@@ -17,7 +17,7 @@ func main() {
 	backupdir := flag.String("backup-dir", "bitbucket-backup", "Folder to backup")
 	flag.Parse()
 	println(`// BitBackup - Backup & Sync your bitbucket team repositories
-// Balamurali Pandranki - <balamurali.pandranki@utu.global>`)
+// Balamurali Pandranki - <balamurali[at]live.com>`)
 	_, err := exec.LookPath("git")
 	if err != nil {
 		log.Fatalln("Git is not available on the system, Please install Git from https://git-scm.com/")
