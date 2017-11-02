@@ -1,5 +1,5 @@
 // BitBackup - Backup & Sync your bitbucket team repositories
-// Balamurali Pandranki - <balamurali.pandranki@utu.global>
+// Balamurali Pandranki - <balamurali[at]live.com>
 package main
 
 import (
