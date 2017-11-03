@@ -5,6 +5,7 @@ package main
 import (
 	"flag"
 	"os/exec"
+	"sync"
 
 	"github.com/ktrysmt/go-bitbucket"
 	log "github.com/sirupsen/logrus"
@@ -43,26 +44,27 @@ func main() {
 		values := vals.([]interface{})
 		log.Infoln("Found", len(values), "Respositories to Sync")
 		//Async
-		//wg := sync.WaitGroup{}
+		wg := sync.WaitGroup{}
 		for _, val := range values {
 			repo := val.(map[string]interface{})
 			//links := repo["links"].(map[string]interface{})
 			//repolink := links["clone"].([]interface{})[0].(map[string]interface{})["href"].(string)
-			//wg.Add(1)
-			//go func() {
-			log.Infoln("Cloning Repo", repo["name"], "into", repo["slug"])
-			giturl := "https://" + *username + ":" + *password + "@bitbucket.org/" + *team + "/" + repo["slug"].(string) + ".git"
-			cmd := exec.Command("git", "clone", giturl, *backupdir+"/"+repo["slug"].(string))
-			err := cmd.Run()
-			if err != nil {
-				//Something went wrong
-				log.Errorln(err)
-			} else {
-				log.Infoln("Done Cloning Repo", repo["name"], "into", repo["slug"], "directory")
-			}
-			//wg.Done()
-			//}()
+			wg.Add(1)
+			go func() {
+				log.Infoln("Cloning Repo", repo["name"], "into", repo["slug"])
+				giturl := "https://" + *username + ":" + *password + "@bitbucket.org/" + *team + "/" + repo["slug"].(string) + ".git"
+				println("Git Clone URL:", giturl)
+				cmd := exec.Command("git", "clone", giturl, *backupdir+"/"+repo["slug"].(string))
+				err := cmd.Run()
+				if err != nil {
+					//Something went wrong
+					log.Errorln(err)
+				} else {
+					log.Infoln("Done Cloning Repo", repo["name"], "into", repo["slug"], "directory")
+				}
+				wg.Done()
+			}()
 		}
-		//wg.Wait()
+		wg.Wait()
 	}
 }
